@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Element Universe: Leo Edition</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #101525;
+  color: white;
+  text-align: center;
+}
+header { padding: 20px 10px; background: #202b49; }
+h1 { font-size: 25px; }
+main { padding: 18px; }
+.elements {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  max-width: 500px;
+  margin: 20px auto;
+}
+button {
+  padding: 16px 8px;
+  border: 1px solid #6479b8;
+  border-radius: 12px;
+  background: #293858;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+button:active { background: #435d91; }
+#result {
+  margin: 20px auto;
+  padding: 18px;
+  max-width: 450px;
+  border-radius: 12px;
+  background: #202b49;
+  min-height: 40px;
+}
+#inventory { margin: 15px auto; line-height: 2; }
+</style>
+</head>
+<body>
+<header>
+<h1>🌌 Element Universe</h1>
+<p>Leo Edition</p>
+</header>
+<main>
+<h2>Combina elementos</h2>
+<p>Elegí dos elementos para descubrir algo nuevo.</p>
+<div id="result">¡Bienvenido, explorador! Elegí dos elementos.</div>
+<div class="elements" id="elements"></div>
+<h3>📚 Elementos descubiertos</h3>
+<div id="inventory"></div>
+</main>
+<script>
+const recipes = {
+  "Agua+Fuego": "Vapor",
+  "Fuego+Tierra": "Lava",
+  "Agua+Tierra": "Planta",
+  "Aire+Fuego": "Energía",
+  "Aire+Agua": "Nube",
+  "Planta+Fuego": "Ceniza",
+  "Agua+Energía": "Vida",
+  "Aire+Tierra": "Polvo",
+  "Lava+Agua": "Piedra",
+  "Nube+Energía": "Tormenta"
+};
+
+let discovered = ["Agua", "Fuego", "Tierra", "Aire"];
+let chosen = [];
+
+function key(a, b) {
+  return [a, b].sort().join("+");
+}
+
+function draw() {
+  const box = document.getElementById("elements");
+  box.innerHTML = "";
+  discovered.forEach(element => {
+    const button = document.createElement("button");
+    button.textContent = "✨ " + element;
+    button.onclick = () => selectElement(element);
+    box.appendChild(button);
+  });
+  document.getElementById("inventory").textContent =
+    discovered.join(" • ");
+}
+
+function selectElement(element) {
+  chosen.push(element);
+  if (chosen.length < 2) {
+    document.getElementById("result").textContent =
+      "Elegiste " + element + ". Ahora elegí otro elemento.";
+    return;
+  }
+  const [a, b] = chosen;
+  const result = recipes[key(a, b)];
+  if (result) {
+    if (!discovered.includes(result)) {
+      discovered.push(result);
+      document.getElementById("result").textContent =
+        "🎉 ¡Descubriste " + result + "!";
+    } else {
+      document.getElementById("result").textContent =
+        "Ya descubriste " + result + ". ¡Probá otra combinación!";
+    }
+  } else {
+    document.getElementById("result").textContent =
+      "🤔 No se descubrió nada. ¡Probá otra combinación!";
+  }
+  chosen = [];
+  draw();
+}
+
+draw();
+</script>
+</body>
+</html> 
